@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Cross Domain Website A</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p><a href="http://asp.net" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+    <button id="loginButton">Login to site B</button>
+    <button id="loginApiButton">Login to site B via WebApi</button>
+    <button id="loginJsonButton">Login to site B using JSON</button>
+    <button id="loginApiJsonButton">Login to site B via WebApi using JSON</button>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Getting started</h2>
+        <p>
+            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+            enables a clean separation of concerns and gives you full control over markup
+            for enjoyable, agile development.
+        </p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Get more libraries</h2>
+        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Web Hosting</h2>
+        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        function login(url, useJson) {
+
+            var data = {
+                userFullName: 'pli@iress',
+                password: '678'
+            };
+
+            var contentType = undefined;
+
+            if (useJson) {
+                data = JSON.stringify(data);
+                contentType = 'application/json';
+            }
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: contentType,
+                data: data
+            })
+            .then(
+                function () { alert('success 3'); },
+                function () { alert('failed'); }
+            );
+        }
+
+        var baseUrl = 'https://crossb.com/'
+
+        @if (Context.Request.Url.OriginalString.Contains("localhost"))
+        {
+            @:baseUrl = 'https://localhost:55781/';
+        }
+
+        $('#loginButton').click(function () {
+            login(baseUrl + 'Account/Login');
+        });
+        $('#loginApiButton').click(function () {
+            login(baseUrl + 'api/Account/Login');
+        });
+        $('#loginJsonButton').click(function () {
+            login(baseUrl + 'Account/Login', true);
+        });
+        $('#loginApiJsonButton').click(function () {
+            login(baseUrl + 'api/Account/Login', true);
+        });
+    });
+</script>
